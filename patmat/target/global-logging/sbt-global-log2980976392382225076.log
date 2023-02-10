@@ -1,0 +1,22 @@
+[debug] > Exec(submit lexgolod@gmail.com SLwPMGZRiWIvX2wR, None, None)
+[debug] Evaluating tasks: submit
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 2 Scala sources to C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes ...
+[info] done compiling
+[info] Attempting to submit "patmat" assignment in "scala-functional-programming" course
+[info] Using:
+[info] - email: lexgolod@gmail.com
+[info] - submit token: SLwPMGZRiWIvX2wR
+[info] Connecting to Coursera...
+[info] Successfully connected to Coursera. (Status 201)
+[info] 
+[info] Assignment submitted successfully!
+[info] 
+[info] You can see how you scored by going to:
+[info] https://www.coursera.org/learn/scala-functional-programming/programming/89qyl/
+[info] or (for premium learners):
+[info] https://www.coursera.org/learn/scala-functional-programming/programming/0K7cz
+[info]                        
+[info] and clicking on "My Submission".
+[success] Total time: 5 s, completed 16 янв. 2023 г., 2:10:43
+[debug] > Exec(idea-shell, None, None)

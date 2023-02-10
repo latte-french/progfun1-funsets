@@ -1,0 +1,31 @@
+[debug] Packaging C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\progfun1-patmat-without-resources_3-0.1.0-SNAPSHOT.jar ...
+[debug] Input file mappings:
+[debug] 	patmat
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat
+[debug] 	patmat\CodeTree.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\CodeTree.class
+[debug] 	patmat\CodeTree.tasty
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\CodeTree.tasty
+[debug] 	patmat\Fork$.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Fork$.class
+[debug] 	patmat\Fork.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Fork.class
+[debug] 	patmat\Fork.tasty
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Fork.tasty
+[debug] 	patmat\Huffman$.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Huffman$.class
+[debug] 	patmat\Huffman.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Huffman.class
+[debug] 	patmat\Huffman.tasty
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Huffman.tasty
+[debug] 	patmat\HuffmanInterface.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\HuffmanInterface.class
+[debug] 	patmat\HuffmanInterface.tasty
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\HuffmanInterface.tasty
+[debug] 	patmat\Leaf$.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Leaf$.class
+[debug] 	patmat\Leaf.class
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Leaf.class
+[debug] 	patmat\Leaf.tasty
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes\patmat\Leaf.tasty
+[debug] Done packaging.

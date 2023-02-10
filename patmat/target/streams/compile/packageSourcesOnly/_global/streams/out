@@ -1,0 +1,7 @@
+[debug] Packaging C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\progfun1-patmat_3-0.1.0-SNAPSHOT-sources.jar ...
+[debug] Input file mappings:
+[debug] 	patmat\Huffman.scala
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\src\main\scala\patmat\Huffman.scala
+[debug] 	patmat\HuffmanInterface.scala
+[debug] 	  C:\Users\Latte\Documents\Workspace\patmat\src\main\scala\patmat\HuffmanInterface.scala
+[debug] Done packaging.
