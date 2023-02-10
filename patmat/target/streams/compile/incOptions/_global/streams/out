@@ -1,0 +1,21 @@
+[debug] Created transactional ClassFileManager with tempDir = C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes.bak
+[debug] About to delete class files:
+[debug] We backup class files:
+[debug] Registering generated classes:
+[debug] 	Huffman.class
+[debug] 	Leaf.class
+[debug] 	HuffmanInterface.class
+[debug] 	Huffman$.class
+[debug] 	Fork$.class
+[debug] 	Leaf$.class
+[debug] 	Fork.class
+[debug] 	CodeTree.class
+[debug] 	Huffman.tasty
+[debug] 	Leaf.tasty
+[debug] 	HuffmanInterface.tasty
+[debug] 	Huffman$.tasty
+[debug] 	Fork$.tasty
+[debug] 	Leaf$.tasty
+[debug] 	Fork.tasty
+[debug] 	CodeTree.tasty
+[debug] Removing the temporary directory used for backing up class files: C:\Users\Latte\Documents\Workspace\patmat\target\scala-3.0.0\classes.bak
