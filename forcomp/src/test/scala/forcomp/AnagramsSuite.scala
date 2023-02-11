@@ -1,5 +1,7 @@
 package forcomp
 
+import scala.collection.immutable.List
+
 class AnagramsSuite extends munit.FunSuite:
   import Anagrams.*
 
@@ -41,6 +43,13 @@ class AnagramsSuite extends munit.FunSuite:
     val r = List(('r', 1))
     val lad = List(('a', 1), ('d', 1), ('l', 1))
     assertEquals(subtract(lard, r), lad)
+  }
+
+  test("add: lard + r") {
+    val lard = List(('a', 1), ('d', 1), ('l', 1), ('r', 1))
+    val r = List(('r', 1))
+    val sum = List(('a', 1), ('d', 1), ('l', 1), ('r', 2))
+    assertEquals(addOccurences(lard, r), sum)
   }
 
 
@@ -117,6 +126,29 @@ class AnagramsSuite extends munit.FunSuite:
   test("sentence anagrams: [] (10pts)") {
     val sentence = List()
     assertEquals(sentenceAnagrams(sentence), List(Nil))
+  }
+
+  test("SentenceHelper") {
+    val sentenceOcc : Occurrences = List(('a', 1), ('e', 1), ('m', 1), ('n', 1), ('s', 1), ('y', 1))
+    val combinList: List[Occurrences] = List(
+      List(('a',1), ('m',1)),
+      List(('a',1), ('e',1), ('m',1)),
+      List(('a',1), ('n',1), ('s',1)),
+      List(('e',1), ('n',1)),
+      List(('s',1), ('y',1)),
+      List(('y',1)),
+      List(('n',1), ('s',1), ('y',1)),
+      List()
+    )
+    val result : Set[List[Occurrences]] = getAllSentenceCombinations(sentenceOcc, combinList).toSet
+    val expectedResult: Set[List[Occurrences]] = Set(
+      List(),
+      List(List(('a',1), ('m',1)), List(('e',1), ('n',1)), List(('s',1), ('y',1))),
+      List(List(('a',1), ('e',1), ('m',1)), List(('n',1), ('s',1), ('y',1)))
+    )
+    val resultFinal = result.foreach((x: List[Occurrences]) => x.toSet)
+    val expectedFinal = expectedResult.foreach((x: List[Occurrences]) => x.toSet)
+    assertEquals(resultFinal, expectedFinal)
   }
 
   test("sentence anagrams: Yes man (10pts)") {

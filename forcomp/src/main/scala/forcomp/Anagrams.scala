@@ -106,10 +106,10 @@ object Anagrams extends AnagramsInterface:
       occurrences.tail match
         case Nil =>
           result = (char, i) :: result
-          val sortedResults: Occurrences = result.filter((charf, intf) => {intf != 0}).sorted
-          sortedResults match
+          val sortedResult: Occurrences = result.filter((charf, intf) => {intf != 0}).sorted
+          sortedResult match
             case Nil =>
-            case (xx :: xxs) => currentList1 = sortedResults :: currentList1
+            case (xx :: xxs) => currentList1 = sortedResult :: currentList1
           result = result.filter({case (char1, _) => !char1.equals(char)})
         case (x :: xs) =>
           result = result.filter({case (char1, _) => !char1.equals(char)})
@@ -154,17 +154,32 @@ object Anagrams extends AnagramsInterface:
     var zMap: Map[Char, Int] = xMap
     for (char, int) <- y yield {
       xMap.get(char) match
-        case None => Nil
+        case None => throw new NoSuchElementException()
         case Some(int: Int) => {
           val delta: Int = xMap(char) - yMap(char)
           if delta >= 0 then
             zMap = zMap + (char -> delta)
-          else Nil
+          else throw new ArithmeticException()
         }
     }
     zMap.toList.filter((char1, int1) => {
       int1 != 0
     }).sorted
+  }
+
+  def addOccurences(x: Occurrences, y: Occurrences): Occurrences = {
+    val xMap: Map[Char, Int] = x.toMap
+    val yMap: Map[Char, Int] = y.toMap
+    var zMap: Map[Char, Int] = xMap
+    for (char, int) <- y yield {
+      xMap.get(char) match
+        case None => zMap = zMap + (char -> int)
+        case Some(int: Int) => {
+          val sum: Int = xMap(char) + yMap(char)
+          zMap = zMap + (char -> sum)
+        }
+    }
+    zMap.toList.sorted
   }
 
     /** Returns a list of all anagram sentences of the given sentence.
@@ -214,6 +229,8 @@ object Anagrams extends AnagramsInterface:
           val sentenceOcc: Occurrences = sentenceOccurrences(sentence)
           val combinList: List[Occurrences] = combinations(sentenceOcc)
           val m: Map[Occurrences, List[Word]] = smallDictionary(sentenceOcc, combinList)
+          val smallDictionayCombin: List[Occurrences] = m.keySet.toList
+          val sentenceComb : List[List[Occurrences]] = getAllSentenceCombinations(sentenceOcc,smallDictionayCombin)
         }
       Nil :: Nil
     }
@@ -225,6 +242,76 @@ object Anagrams extends AnagramsInterface:
           case None => m + (occ1 -> Nil)
           case Some(l: List[Word]) => m = m + (occ1 -> l)
       m
+
+    def getAllSentenceCombinations(sentenceOcc : Occurrences, combinList: List[Occurrences]) :  List[List[Occurrences]] =
+      var result: List[List[Occurrences]] = Nil
+      combinList match
+        case Nil => result
+        case (x :: xs) => {
+          var combinOnheNull: List[Occurrences] = combinList.filter(x => !x.equals(List()))
+          val temp: Set[List[Occurrences]] = Set.empty
+          val sentenceHelper: Set[List[Occurrences]] =
+            getAllSentenceCombinationsHelper(sentenceOcc, combinOnheNull, Nil, Nil, temp)
+          result = sentenceHelper.toList ::: result
+          result = List() :: result
+          result
+        }
+
+    def getAllSentenceCombinationsHelper(sentenceOcc : Occurrences, intermediateCombinList: List[Occurrences],
+                                         intermediateAccList: List[Occurrences],
+                                         intermediateAccOccurrences: Occurrences,
+                                         intermediateResult: Set[List[Occurrences]]) :
+    Set[List[Occurrences]] =
+      var accList: List[Occurrences] = intermediateAccList
+      var accOccurrences: Occurrences = intermediateAccOccurrences
+      var result: Set[List[Occurrences]] = intermediateResult
+      var combinList : List[Occurrences] = intermediateCombinList
+      println("combinList before loop = " + combinList.toString())
+      combinList = combinList.filter(x => !accList.contains(x))
+      combinList match
+        case Nil => result
+        case (xx :: xxs) => {
+            for {occ <- combinList if !accList.contains(occ)} yield {
+              println("combinList when loop began = " + combinList.toString())
+              accOccurrences = addOccurences(occ, accOccurrences)
+              accList = occ :: accList
+              println("occ = " + occ.toString())
+              println("accList = " + accList.toString())
+//              println("and accOccurrences = " + accOccurrences.toString())
+              try {
+                val substract: Occurrences = subtract(sentenceOcc, accOccurrences)
+                substract match
+                  case Nil => {
+                    println("Perfect match! accList = " + accList.toString())
+//                    println("and accOccurrences = " + accOccurrences.toString())
+                    result = result + accList
+                    combinList = combinList.filter(x => !accList.contains(x))
+                    accList = accList.filter(x => !x.equals(occ))
+                    accOccurrences = subtract(accOccurrences, occ)
+                  }
+                  case (x :: xs) => {
+                    println("Need some more! accList = " + accList.toString())
+ //                   println("and accOccurrences = " + accOccurrences.toString())
+                    combinList = combinList.filter(x => !accList.contains(x))
+                    val nextIteration = getAllSentenceCombinationsHelper(sentenceOcc, combinList,
+                      accList, accOccurrences, result)
+                    result = result ++ nextIteration
+                    accList = accList.filter(x => !x.equals(occ))
+                    accOccurrences = subtract(accOccurrences, occ)
+                  }
+              } catch {
+                case e: (NoSuchElementException | ArithmeticException) => {
+                  println("Overload! accList = " + accList.toString())
+                  combinList = combinList.filter(x => !accList.contains(x))
+                  accList = accList.filter(x => !x.equals(occ))
+                  accOccurrences = subtract(accOccurrences, occ)
+                }
+              }
+            }
+          result
+        }
+     // (Nil, Nil)
+
 
 
 
