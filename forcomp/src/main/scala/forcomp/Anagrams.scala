@@ -302,7 +302,7 @@ object Anagrams extends AnagramsInterface:
                 accOccurrences = subtract(accOccurrences, occ)
               }
             }
-          result
+            result
         }
 
     def getAllSentenceCombinationsWithPermutations(sentenceComb : List[List[Occurrences]]) :
