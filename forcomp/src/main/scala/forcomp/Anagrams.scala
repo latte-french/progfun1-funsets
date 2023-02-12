@@ -1,6 +1,6 @@
 package forcomp
 
-import forcomp.Anagrams.Occurrences
+import forcomp.Anagrams.{Occurrences, Word}
 
 import scala.io.{Codec, Source}
 
@@ -223,16 +223,21 @@ object Anagrams extends AnagramsInterface:
      * Note: There is only one anagram of an empty sentence.
      */
     def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+      var sentenceAnagramsResult: List[Sentence] = Nil
       sentence match
-        case Nil => Nil :: Nil
+        case Nil => sentenceAnagramsResult = List(Nil)
         case (x :: xs) => {
           val sentenceOcc: Occurrences = sentenceOccurrences(sentence)
           val combinList: List[Occurrences] = combinations(sentenceOcc)
           val m: Map[Occurrences, List[Word]] = smallDictionary(sentenceOcc, combinList)
           val smallDictionayCombin: List[Occurrences] = m.keySet.toList
           val sentenceComb : List[List[Occurrences]] = getAllSentenceCombinations(sentenceOcc,smallDictionayCombin)
+          val sentenceCombinationsWithPermutations : List[List[Occurrences]] =
+            getAllSentenceCombinationsWithPermutations(sentenceComb)
+          val result = sentenceAnagramsHelper(sentenceCombinationsWithPermutations)
+          sentenceAnagramsResult = result.filter((y : Sentence) => !y.equals(List()))
         }
-      Nil :: Nil
+      sentenceAnagramsResult
     }
 
     def smallDictionary(sentenceOcc: Occurrences, combinList: List[Occurrences]) : Map[Occurrences, List[Word]] =
@@ -266,51 +271,105 @@ object Anagrams extends AnagramsInterface:
       var accOccurrences: Occurrences = intermediateAccOccurrences
       var result: Set[List[Occurrences]] = intermediateResult
       var combinList : List[Occurrences] = intermediateCombinList
-      println("combinList before loop = " + combinList.toString())
+//      println("combinList before loop = " + combinList.toString())
       combinList = combinList.filter(x => !accList.contains(x))
       combinList match
         case Nil => result
         case (xx :: xxs) => {
             for {occ <- combinList if !accList.contains(occ)} yield {
-              println("combinList when loop began = " + combinList.toString())
               accOccurrences = addOccurences(occ, accOccurrences)
               accList = occ :: accList
-              println("occ = " + occ.toString())
-              println("accList = " + accList.toString())
-//              println("and accOccurrences = " + accOccurrences.toString())
               try {
                 val substract: Occurrences = subtract(sentenceOcc, accOccurrences)
                 substract match
                   case Nil => {
-                    println("Perfect match! accList = " + accList.toString())
-//                    println("and accOccurrences = " + accOccurrences.toString())
                     result = result + accList
                     combinList = combinList.filter(x => !accList.contains(x))
-                    accList = accList.filter(x => !x.equals(occ))
-                    accOccurrences = subtract(accOccurrences, occ)
                   }
                   case (x :: xs) => {
-                    println("Need some more! accList = " + accList.toString())
- //                   println("and accOccurrences = " + accOccurrences.toString())
                     combinList = combinList.filter(x => !accList.contains(x))
                     val nextIteration = getAllSentenceCombinationsHelper(sentenceOcc, combinList,
                       accList, accOccurrences, result)
                     result = result ++ nextIteration
-                    accList = accList.filter(x => !x.equals(occ))
-                    accOccurrences = subtract(accOccurrences, occ)
                   }
               } catch {
                 case e: (NoSuchElementException | ArithmeticException) => {
-                  println("Overload! accList = " + accList.toString())
                   combinList = combinList.filter(x => !accList.contains(x))
-                  accList = accList.filter(x => !x.equals(occ))
-                  accOccurrences = subtract(accOccurrences, occ)
                 }
+              }
+              finally {
+                accList = accList.filter(x => !x.equals(occ))
+                accOccurrences = subtract(accOccurrences, occ)
               }
             }
           result
         }
-     // (Nil, Nil)
+
+    def getAllSentenceCombinationsWithPermutations(sentenceComb : List[List[Occurrences]]) :
+    List[List[Occurrences]] =
+      val sentenceCombTemp = sentenceComb
+      var iterator: Iterator[List[Occurrences]] = Iterator.empty[List[Occurrences]]
+      var result: List[List[Occurrences]] = Nil
+      sentenceCombTemp.foreach((list: List[Occurrences]) => {
+        iterator = list.permutations
+        val sentenceCombWithPermutations: List[List[Occurrences]] = iterator.toList
+        println(sentenceCombWithPermutations.toString())
+        result = sentenceCombWithPermutations ::: result
+      })
+//      println(result.toString())
+      result
+
+    def sentenceAnagramsHelper(sentenceCombinations: List[List[Occurrences]]) : List[Sentence] =
+      val sentenceCombins = sentenceCombinations
+      var result: List[Sentence] = Nil
+      for (combination <- sentenceCombins) yield {
+          val sentencesForComb: List[Sentence] = getSentencesForComb(combination)
+          result = sentencesForComb ::: result
+        }
+      result
+
+    def getSentencesForComb(combination: List[Occurrences]) : List[Sentence] =
+      var occurrencesWordList : List[List[Word]] = Nil
+      for (occ <- combination) yield {
+        val occWord: Word = occurrencesToWord(occ)
+        val wordAnagramsList: List[Word] = wordAnagrams(occWord)
+        occurrencesWordList = wordAnagramsList :: occurrencesWordList
+      }
+      val result: List[Sentence] = formSentences(occurrencesWordList, Nil, Nil)._2
+      result
+
+    def formSentences(occWordList: List[List[Word]],
+                      intermediateCurrentSentence: Sentence,
+                      intermediateResult: List[Sentence]):
+    (Sentence, List[Sentence]) =
+      var result : List[Sentence] = intermediateResult
+      var currentSentence: Sentence = intermediateCurrentSentence
+      occWordList match
+        case Nil => {
+          result = currentSentence :: result
+          (currentSentence,result)
+        }
+        case (x :: xs) => {
+          val currentWordAnagrams = occWordList.head
+          for (word <- currentWordAnagrams) yield {
+              currentSentence = word :: currentSentence
+              val (currSentence: Sentence, currResult: List[Sentence]) =
+                formSentences(occWordList.tail, currentSentence, result)
+              currentSentence = currSentence.filter(x => !x.equals(word))
+              result = currResult
+          }
+        }
+      (currentSentence, result)
+
+    def occurrencesToWord(occurrences: Occurrences) : Word =
+      var w: Word = ""
+      var occChars: List[Char] = Nil
+      occurrences.foreach((char, int) => {
+        for i <- 1 to int by 1 yield
+          occChars = char :: occChars
+      })
+      w = occChars.reverse.mkString
+      w
 
 
 

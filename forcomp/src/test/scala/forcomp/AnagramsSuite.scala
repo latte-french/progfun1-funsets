@@ -146,9 +146,38 @@ class AnagramsSuite extends munit.FunSuite:
       List(List(('a',1), ('m',1)), List(('e',1), ('n',1)), List(('s',1), ('y',1))),
       List(List(('a',1), ('e',1), ('m',1)), List(('n',1), ('s',1), ('y',1)))
     )
-    val resultFinal = result.foreach((x: List[Occurrences]) => x.toSet)
-    val expectedFinal = expectedResult.foreach((x: List[Occurrences]) => x.toSet)
+    val resultFinal = result.map((x: List[Occurrences]) => x.toSet)
+    val expectedFinal = expectedResult.map((x: List[Occurrences]) => x.toSet)
     assertEquals(resultFinal, expectedFinal)
+  }
+
+  test("sentence combinations with permutations") {
+    val sentenceComb: List[List[Occurrences]] = List(
+      List(),
+      List(List(('a', 1), ('m', 1)), List(('e', 1), ('n', 1)), List(('s', 1), ('y', 1))),
+      List(List(('a', 1), ('e', 1), ('m', 1)), List(('n', 1), ('s', 1), ('y', 1)))
+    )
+    val expectedResult: Set[Set[Occurrences]] = Set(
+      Set(),
+      Set(List(('a', 1), ('m', 1)), List(('e', 1), ('n', 1)), List(('s', 1), ('y', 1))),
+      Set(List(('a', 1), ('m', 1)), List(('s', 1), ('y', 1)), List(('e', 1), ('n', 1))),
+      Set(List(('e', 1), ('n', 1)), List(('a', 1), ('m', 1)), List(('s', 1), ('y', 1))),
+      Set(List(('e', 1), ('n', 1)), List(('s', 1), ('y', 1)), List(('a', 1), ('m', 1))),
+      Set(List(('s', 1), ('y', 1)), List(('a', 1), ('m', 1)), List(('e', 1), ('n', 1))),
+      Set(List(('s', 1), ('y', 1)), List(('e', 1), ('n', 1)), List(('a', 1), ('m', 1))),
+      Set(List(('a', 1), ('e', 1), ('m', 1)), List(('n', 1), ('s', 1), ('y', 1))),
+      Set(List(('n', 1), ('s', 1), ('y', 1)), List(('a', 1), ('e', 1), ('m', 1)))
+    )
+    val result: List[List[Occurrences]] = getAllSentenceCombinationsWithPermutations(sentenceComb)
+    val resultSet: Set[List[Occurrences]] = result.toSet
+    val resultSetFinal: Set[Set[Occurrences]] = resultSet.map((x: List[Occurrences]) => x.toSet)
+    assertEquals(expectedResult, resultSetFinal)
+  }
+
+  test("formSentences test"){
+    val occWordList = List(List("parley", "pearly", "player", "replay"), List("married", "admirer"))
+    val result: List[Sentence] = formSentences(occWordList, Nil, Nil)._2
+    assertEquals(result.nonEmpty, true)
   }
 
   test("sentence anagrams: Yes man (10pts)") {
@@ -197,6 +226,20 @@ class AnagramsSuite extends munit.FunSuite:
       List("Linux", "rulez")
     )
     assertEquals(sentenceAnagrams(sentence).toSet, anas.toSet)
+  }
+
+  test("Occurrences to word - no repeating symbols") {
+    val occ: Occurrences = List(('e', 1), ('n', 1), ('a', 1))
+    val w: Word = "ena"
+    val result: Word = occurrencesToWord(occ)
+    assertEquals(result, w)
+  }
+
+  test("Occurrences to word - repeating symbols") {
+    val occ: Occurrences = List(('n', 1), ('u', 1), ('l', 2))
+    val w: Word = "null"
+    val result: Word = occurrencesToWord(occ)
+    assertEquals(result, w)
   }
 
 
